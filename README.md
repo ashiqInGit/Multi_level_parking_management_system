@@ -188,7 +188,218 @@ java -cp out com.parking.ParkingApp
 
 ## Usage
 
-*Coming in Phase 4*
+### Starting the Application
+
+```bash
+./compile.sh   # Compile the application
+./run.sh       # Run the application
+```
+
+### Initial Setup
+
+When you start the application, you'll be asked to configure the parking lot:
+
+```
+═══ PARKING LOT SETUP ═══
+
+Use default configuration? (y/n): y
+
+✓ Parking lot initialized with default configuration:
+  • 3 floors
+  • 10 motorbike spots per floor
+  • 10 car spots per floor
+  • 5 truck spots per floor
+```
+
+Or customize:
+```
+Use default configuration? (y/n): n
+Enter parking lot name: My Parking
+Enter parking lot address: 456 Oak Street
+Enter number of floors: 2
+Enter motorbike spots per floor: 5
+Enter car spots per floor: 8
+Enter truck spots per floor: 3
+```
+
+### Main Menu Options
+
+```
+┌───────────────────────────────────────┐
+│            MAIN MENU                  │
+├───────────────────────────────────────┤
+│  1. Park Vehicle                      │
+│  2. Exit Parking (by Ticket ID)       │
+│  3. Exit Parking (by License Plate)   │
+│  4. View Parking Status               │
+│  5. View Parked Vehicles              │
+│  6. View Fee Structure                │
+│  7. Search Ticket                     │
+│  0. Exit Application                  │
+└───────────────────────────────────────┘
+```
+
+### 1. Park Vehicle
+
+Select vehicle type, enter license plate and owner name:
+
+```
+═══ PARK VEHICLE ═══
+
+Vehicle Types:
+  1. Motorbike (30 spots available)
+  2. Car (30 spots available)
+  3. Truck (15 spots available)
+
+Select vehicle type (1-3): 2
+Enter license plate: KA01AB1234
+Enter owner name: John Doe
+
+✓ Vehicle parked successfully!
+
+╔════════════════════════════════════════╗
+║         PARKING TICKET                 ║
+╠════════════════════════════════════════╣
+║ Ticket ID  : TKT-A1B2C3D4              ║
+║ Vehicle    : Car                       ║
+║ License    : KA01AB1234                ║
+║ Spot       : F1-C01                    ║
+║ Entry Time : 2024-01-15 10:30:00       ║
+╚════════════════════════════════════════╝
+
+⚠️  Please keep your ticket ID safe: TKT-A1B2C3D4
+```
+
+### 2. Exit Parking (by Ticket ID)
+
+```
+═══ EXIT PARKING ═══
+
+Enter ticket ID: TKT-A1B2C3D4
+
+╔═══════════════════════════════════════════╗
+║           EXIT RECEIPT                    ║
+╠═══════════════════════════════════════════╣
+║ Ticket ID    : TKT-A1B2C3D4               ║
+║ Vehicle      : Car                        ║
+║ License Plate: KA01AB1234                 ║
+║ Entry Time   : 2024-01-15 10:30:00        ║
+║ Exit Time    : 2024-01-15 12:45:00        ║
+║ Duration     : 3 hour(s)                  ║
+╠═══════════════════════════════════════════╣
+║ TOTAL AMOUNT : ₹40.00                     ║
+╠═══════════════════════════════════════════╣
+║           THANK YOU! VISIT AGAIN          ║
+╚═══════════════════════════════════════════╝
+
+┌─────────────────────────────────────┐
+│         FEE BREAKDOWN               │
+├─────────────────────────────────────┤
+│ Vehicle Type : Car                  │
+│ Duration     : 3 hour(s)            │
+│ Base Rate    : ₹20.00               │
+│ Additional   : 2 hrs × ₹10 = ₹20.00 │
+├─────────────────────────────────────┤
+│ TOTAL FEE    : ₹40.00               │
+└─────────────────────────────────────┘
+
+✓ Payment processed successfully!
+```
+
+### 3. Exit Parking (by License Plate)
+
+Alternative to ticket ID - useful if ticket is lost:
+
+```
+═══ EXIT PARKING ═══
+
+Enter license plate: KA01AB1234
+```
+
+### 4. View Parking Status
+
+See overall availability:
+
+```
+═══ PARKING STATUS ═══
+
+╔══════════════════════════════════════════════════════╗
+║  City Center Parking                                 ║
+║  123 Main Street                                     ║
+╠══════════════════════════════════════════════════════╣
+║  OVERALL AVAILABILITY:                               ║
+║    Motorbike: 28/30 spots available                  ║
+║    Car: 25/30 spots available                        ║
+║    Truck: 15/15 spots available                      ║
+╠══════════════════════════════════════════════════════╣
+║  FLOOR-WISE STATUS:                                  ║
+║  Floor-1                                             ║
+║    Motorbike: 9/10                                   ║
+║    Car: 8/10                                         ║
+║    Truck: 5/5                                        ║
+║  ...                                                 ║
+╚══════════════════════════════════════════════════════╝
+
+Currently parked vehicles: 7
+```
+
+### 5. View Parked Vehicles
+
+List all currently parked vehicles:
+
+```
+═══ PARKED VEHICLES ═══
+
+Total vehicles parked: 3
+
+┌─────────────────┬──────────────┬────────────┬────────────────────────┐
+│ Ticket ID       │ License Plate│ Type       │ Entry Time             │
+├─────────────────┼──────────────┼────────────┼────────────────────────┤
+│ TKT-A1B2C3D4    │ KA01AB1234   │ Car        │ 2024-01-15 10:30:00    │
+│ TKT-E5F6G7H8    │ MH02XY5678   │ Motorbike  │ 2024-01-15 11:00:00    │
+│ TKT-I9J0K1L2    │ TN03ZZ9999   │ Truck      │ 2024-01-15 09:15:00    │
+└─────────────────┴──────────────┴────────────┴────────────────────────┘
+```
+
+### 6. View Fee Structure
+
+Display current pricing:
+
+```
+═══ FEE STRUCTURE ═══
+
+┌────────────┬─────────────────────┬────────────────────────┐
+│ Vehicle    │ Base Rate (1st hr)  │ Additional (per hour)  │
+├────────────┼─────────────────────┼────────────────────────┤
+│ Motorbike  │ ₹10.00              │ ₹5.00                  │
+│ Car        │ ₹20.00              │ ₹10.00                 │
+│ Truck      │ ₹40.00              │ ₹20.00                 │
+└────────────┴─────────────────────┴────────────────────────┘
+
+Notes:
+  • Minimum charge is the base rate (for duration ≤ 1 hour)
+  • Partial hours are rounded up to the next full hour
+  • Formula: Base Rate + (Additional Hours × Hourly Rate)
+```
+
+### 7. Search Ticket
+
+Look up ticket by ID or license plate:
+
+```
+═══ SEARCH TICKET ═══
+
+Search by:
+  1. Ticket ID
+  2. License Plate
+Enter choice (1-2): 2
+Enter license plate: KA01AB1234
+
+✓ Ticket found:
+╔════════════════════════════════════════╗
+║         PARKING TICKET                 ║
+...
+```
 
 ---
 
@@ -201,7 +412,8 @@ java -cp out com.parking.ParkingApp
 ## Development Phases
 
 - [x] **Phase 1**: Project Setup & Core Models
-- [x] **Phase 2**: Core Services
-- [ ] **Phase 3**: Console Application
-- [ ] **Phase 4**: Testing Suite
-- [ ] **Phase 5**: Documentation Completion
+- [x] **Phase 2**: Design Pattern Implementations
+- [x] **Phase 3**: Core Services
+- [x] **Phase 4**: Console Application
+- [ ] **Phase 5**: Testing Suite
+- [ ] **Phase 6**: Documentation Completion
