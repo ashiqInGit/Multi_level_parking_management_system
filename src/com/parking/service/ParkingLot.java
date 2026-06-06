@@ -17,7 +17,6 @@ public class ParkingLot {
     private static ParkingLot instance;
 
     private String name;
-    private String address;
     private final List<ParkingFloor> floors;
     private boolean isInitialized;
     private static final int DEFAULT_FLOORS = 3;
@@ -47,19 +46,18 @@ public class ParkingLot {
         instance = null;
     }
 
-    public void initialize(String name, String address) {
-        initialize(name, address, DEFAULT_FLOORS,
+    public void initialize(String name) {
+        initialize(name, DEFAULT_FLOORS,
             DEFAULT_MOTORBIKE_SPOTS, DEFAULT_CAR_SPOTS, DEFAULT_TRUCK_SPOTS);
     }
 
-    public void initialize(String name, String address, int numFloors,
+    public void initialize(String name, int numFloors,
                           int motorbikeSpots, int carSpots, int truckSpots) {
         if (isInitialized) {
             throw new IllegalStateException("Parking lot is already initialized");
         }
 
         this.name = name;
-        this.address = address;
 
         // Create floors
         for (int i = 1; i <= numFloors; i++) {
@@ -137,7 +135,6 @@ public class ParkingLot {
         StringBuilder sb = new StringBuilder();
         sb.append("\n╔══════════════════════════════════════════════════════╗\n");
         sb.append(String.format("║  %s%s║\n", name, " ".repeat(52 - name.length())));
-        sb.append(String.format("║  %s%s║\n", address, " ".repeat(52 - address.length())));
         sb.append("╠══════════════════════════════════════════════════════╣\n");
 
         // Overall summary
@@ -182,9 +179,6 @@ public class ParkingLot {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
 
     public int getNumberOfFloors() {
         return floors.size();

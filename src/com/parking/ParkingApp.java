@@ -91,24 +91,21 @@ public class ParkingApp {
         String useDefault = scanner.nextLine().trim().toLowerCase();
 
         if (useDefault.equals("y") || useDefault.equals("yes")) {
-            parkingService.initializeParkingLot(
-                "City Center Parking",
-                "123 Main Street"
-            );
+            parkingService.initializeParkingLot("City Center Parking");
             System.out.println("\n✓ Parking lot initialized with default configuration:");
+            System.out.println("  • Name: City Center Parking");
             System.out.println("  • 3 floors");
             System.out.println("  • 10 motorbike spots per floor");
             System.out.println("  • 10 car spots per floor");
             System.out.println("  • 5 truck spots per floor");
         } else {
             String name = getStringInput("Enter parking lot name: ");
-            String address = getStringInput("Enter parking lot address: ");
             int floors = getPositiveIntInput("Enter number of floors: ");
             int motorbikeSpots = getPositiveIntInput("Enter motorbike spots per floor: ");
             int carSpots = getPositiveIntInput("Enter car spots per floor: ");
             int truckSpots = getPositiveIntInput("Enter truck spots per floor: ");
 
-            parkingService.initializeParkingLot(name, address, floors,
+            parkingService.initializeParkingLot(name, floors,
                 motorbikeSpots, carSpots, truckSpots);
 
             System.out.println("\n✓ Parking lot initialized successfully!");

@@ -205,6 +205,7 @@ When you start the application, you'll be asked to configure the parking lot:
 Use default configuration? (y/n): y
 
 ✓ Parking lot initialized with default configuration:
+  • Name: City Center Parking
   • 3 floors
   • 10 motorbike spots per floor
   • 10 car spots per floor
@@ -215,7 +216,6 @@ Or customize:
 ```
 Use default configuration? (y/n): n
 Enter parking lot name: My Parking
-Enter parking lot address: 456 Oak Street
 Enter number of floors: 2
 Enter motorbike spots per floor: 5
 Enter car spots per floor: 8
@@ -325,7 +325,6 @@ See overall availability:
 
 ╔══════════════════════════════════════════════════════╗
 ║  City Center Parking                                 ║
-║  123 Main Street                                     ║
 ╠══════════════════════════════════════════════════════╣
 ║  OVERALL AVAILABILITY:                               ║
 ║    Motorbike: 28/30 spots available                  ║

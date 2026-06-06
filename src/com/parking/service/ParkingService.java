@@ -30,13 +30,28 @@ public class ParkingService {
         this.parkingLot = ParkingLot.getInstance();
         this.ticketService = ticketService;
     }
-    public void initializeParkingLot(String name, String address) {
-        parkingLot.initialize(name, address);
+
+    /**
+     * Initialize the parking lot with default configuration
+     *
+     * @param name Parking lot name
+     */
+    public void initializeParkingLot(String name) {
+        parkingLot.initialize(name);
     }
 
-    public void initializeParkingLot(String name, String address, int numFloors,
+    /**
+     * Initialize parking lot with custom configuration
+     *
+     * @param name Parking lot name
+     * @param numFloors Number of floors
+     * @param motorbikeSpots Motorbike spots per floor
+     * @param carSpots Car spots per floor
+     * @param truckSpots Truck spots per floor
+     */
+    public void initializeParkingLot(String name, int numFloors,
                                      int motorbikeSpots, int carSpots, int truckSpots) {
-        parkingLot.initialize(name, address, numFloors, motorbikeSpots, carSpots, truckSpots);
+        parkingLot.initialize(name, numFloors, motorbikeSpots, carSpots, truckSpots);
     }
 
     public ParkingTicket parkVehicle(Vehicle vehicle) {
