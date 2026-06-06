@@ -11,6 +11,8 @@ A console-based parking management system built in Java that manages parking for
 - [Build & Run](#build--run)
 - [Usage](#usage)
 - [Testing](#testing)
+- [Extensibility](#extensibility)
+- [License](#license)
 
 ---
 
@@ -113,6 +115,10 @@ Where:
 ```
 Multi_level_parking_management_system/
 ├── README.md
+├── compile.sh                           # Compile script
+├── run.sh                               # Run script
+├── test.sh                              # Test script
+├── .gitignore
 ├── src/
 │   └── com/parking/
 │       ├── ParkingApp.java              # Main entry point
@@ -128,9 +134,10 @@ Multi_level_parking_management_system/
 │       │   ├── ParkingFloor.java        # Parking floor model
 │       │   └── ParkingTicket.java       # Parking ticket model
 │       ├── factory/
-│       │   └── VehicleFactory.java      # Vehicle factory
+│       │   └── VehicleFactory.java      # Vehicle factory (Factory Pattern)
 │       ├── strategy/
-│       │   ├── FeeCalculationStrategy.java
+│       │   ├── FeeCalculationStrategy.java    # Strategy interface
+│       │   ├── FeeStrategyFactory.java        # Strategy registry
 │       │   ├── MotorbikeFeeStrategy.java
 │       │   ├── CarFeeStrategy.java
 │       │   └── TruckFeeStrategy.java
@@ -142,13 +149,22 @@ Multi_level_parking_management_system/
 │           ├── ParkingFullException.java
 │           ├── InvalidTicketException.java
 │           └── VehicleAlreadyParkedException.java
-├── test/
-│   └── com/parking/
-│       ├── TestRunner.java              # Test runner
-│       └── ...                          # Test classes
-├── compile.sh                           # Compile script
-├── run.sh                               # Run script
-└── test.sh                              # Test script
+└── test/
+    └── com/parking/test/
+        ├── TestMain.java                # Test entry point
+        ├── TestRunner.java              # Test framework
+        ├── TestResult.java              # Result tracking
+        ├── factory/
+        │   └── VehicleFactoryTest.java
+        ├── model/
+        │   └── ParkingTicketTest.java
+        ├── strategy/
+        │   └── FeeCalculationTest.java
+        ├── service/
+        │   ├── ParkingLotTest.java
+        │   └── ParkingServiceTest.java
+        └── integration/
+            └── ParkingSystemIntegrationTest.java
 ```
 
 ---
@@ -200,16 +216,16 @@ java -cp out com.parking.ParkingApp
 When you start the application, you'll be asked to configure the parking lot:
 
 ```
-═══ PARKING LOT SETUP ═══
+=== PARKING LOT SETUP ===
 
 Use default configuration? (y/n): y
 
-✓ Parking lot initialized with default configuration:
-  • Name: City Center Parking
-  • 3 floors
-  • 10 motorbike spots per floor
-  • 10 car spots per floor
-  • 5 truck spots per floor
+[SUCCESS] Parking lot initialized with default configuration:
+  - Name: City Center Parking
+  - 3 floors
+  - 10 motorbike spots per floor
+  - 10 car spots per floor
+  - 5 truck spots per floor
 ```
 
 Or customize:
@@ -244,7 +260,7 @@ Enter truck spots per floor: 3
 Select vehicle type, enter license plate and owner name:
 
 ```
-═══ PARK VEHICLE ═══
+=== PARK VEHICLE ===
 
 Vehicle Types:
   1. Motorbike (30 spots available)
@@ -255,55 +271,55 @@ Select vehicle type (1-3): 2
 Enter license plate: KA01AB1234
 Enter owner name: John Doe
 
-✓ Vehicle parked successfully!
+[SUCCESS] Vehicle parked successfully!
 
-╔════════════════════════════════════════╗
-║         PARKING TICKET                 ║
-╠════════════════════════════════════════╣
-║ Ticket ID  : TKT-A1B2C3D4              ║
-║ Vehicle    : Car                       ║
-║ License    : KA01AB1234                ║
-║ Spot       : F1-C01                    ║
-║ Entry Time : 2024-01-15 10:30:00       ║
-╚════════════════════════════════════════╝
++========================================+
+|         PARKING TICKET                 |
++========================================+
+| Ticket ID  : TKT-A1B2C3D4              |
+| Vehicle    : Car                       |
+| License    : KA01AB1234                |
+| Spot       : F1-C01                    |
+| Entry Time : 2024-01-15 10:30:00       |
++========================================+
 
-⚠️  Please keep your ticket ID safe: TKT-A1B2C3D4
+[IMPORTANT] Please keep your ticket ID safe: TKT-A1B2C3D4
 ```
 
 ### 2. Exit Parking (by Ticket ID)
 
 ```
-═══ EXIT PARKING ═══
+=== EXIT PARKING ===
 
 Enter ticket ID: TKT-A1B2C3D4
 
-╔═══════════════════════════════════════════╗
-║           EXIT RECEIPT                    ║
-╠═══════════════════════════════════════════╣
-║ Ticket ID    : TKT-A1B2C3D4               ║
-║ Vehicle      : Car                        ║
-║ License Plate: KA01AB1234                 ║
-║ Entry Time   : 2024-01-15 10:30:00        ║
-║ Exit Time    : 2024-01-15 12:45:00        ║
-║ Duration     : 3 hour(s)                  ║
-╠═══════════════════════════════════════════╣
-║ TOTAL AMOUNT : ₹40.00                     ║
-╠═══════════════════════════════════════════╣
-║           THANK YOU! VISIT AGAIN          ║
-╚═══════════════════════════════════════════╝
++-------------------------------------------+
+|           EXIT RECEIPT                    |
++-------------------------------------------+
+| Ticket ID    : TKT-A1B2C3D4               |
+| Vehicle      : Car                        |
+| License Plate: KA01AB1234                 |
+| Entry Time   : 2024-01-15 10:30:00        |
+| Exit Time    : 2024-01-15 12:45:00        |
+| Duration     : 3 hour(s)                  |
++-------------------------------------------+
+| TOTAL AMOUNT : Rs.40.00                   |
++-------------------------------------------+
+|           THANK YOU! VISIT AGAIN          |
++-------------------------------------------+
 
-┌─────────────────────────────────────┐
-│         FEE BREAKDOWN               │
-├─────────────────────────────────────┤
-│ Vehicle Type : Car                  │
-│ Duration     : 3 hour(s)            │
-│ Base Rate    : ₹20.00               │
-│ Additional   : 2 hrs × ₹10 = ₹20.00 │
-├─────────────────────────────────────┤
-│ TOTAL FEE    : ₹40.00               │
-└─────────────────────────────────────┘
++-------------------------------------+
+|         FEE BREAKDOWN               |
++-------------------------------------+
+| Vehicle Type : Car                  |
+| Duration     : 3 hour(s)            |
+| Base Rate    : Rs.20.00             |
+| Additional   : 2 hrs x Rs.10 = Rs.20|
++-------------------------------------+
+| TOTAL FEE    : Rs.40.00             |
++-------------------------------------+
 
-✓ Payment processed successfully!
+[SUCCESS] Payment processed successfully!
 ```
 
 ### 3. Exit Parking (by License Plate)
@@ -311,7 +327,7 @@ Enter ticket ID: TKT-A1B2C3D4
 Alternative to ticket ID - useful if ticket is lost:
 
 ```
-═══ EXIT PARKING ═══
+=== EXIT PARKING ===
 
 Enter license plate: KA01AB1234
 ```
@@ -321,23 +337,23 @@ Enter license plate: KA01AB1234
 See overall availability:
 
 ```
-═══ PARKING STATUS ═══
+=== PARKING STATUS ===
 
-╔══════════════════════════════════════════════════════╗
-║  City Center Parking                                 ║
-╠══════════════════════════════════════════════════════╣
-║  OVERALL AVAILABILITY:                               ║
-║    Motorbike: 28/30 spots available                  ║
-║    Car: 25/30 spots available                        ║
-║    Truck: 15/15 spots available                      ║
-╠══════════════════════════════════════════════════════╣
-║  FLOOR-WISE STATUS:                                  ║
-║  Floor-1                                             ║
-║    Motorbike: 9/10                                   ║
-║    Car: 8/10                                         ║
-║    Truck: 5/5                                        ║
-║  ...                                                 ║
-╚══════════════════════════════════════════════════════╝
++------------------------------------------------------+
+|  City Center Parking                                 |
++------------------------------------------------------+
+|  OVERALL AVAILABILITY:                               |
+|    Motorbike: 28/30 spots available                  |
+|    Car: 25/30 spots available                        |
+|    Truck: 15/15 spots available                      |
++------------------------------------------------------+
+|  FLOOR-WISE STATUS:                                  |
+|  Floor-1                                             |
+|    Motorbike: 9/10                                   |
+|    Car: 8/10                                         |
+|    Truck: 5/5                                        |
+|  ...                                                 |
++------------------------------------------------------+
 
 Currently parked vehicles: 7
 ```
@@ -347,17 +363,17 @@ Currently parked vehicles: 7
 List all currently parked vehicles:
 
 ```
-═══ PARKED VEHICLES ═══
+=== PARKED VEHICLES ===
 
 Total vehicles parked: 3
 
-┌─────────────────┬──────────────┬────────────┬────────────────────────┐
-│ Ticket ID       │ License Plate│ Type       │ Entry Time             │
-├─────────────────┼──────────────┼────────────┼────────────────────────┤
-│ TKT-A1B2C3D4    │ KA01AB1234   │ Car        │ 2024-01-15 10:30:00    │
-│ TKT-E5F6G7H8    │ MH02XY5678   │ Motorbike  │ 2024-01-15 11:00:00    │
-│ TKT-I9J0K1L2    │ TN03ZZ9999   │ Truck      │ 2024-01-15 09:15:00    │
-└─────────────────┴──────────────┴────────────┴────────────────────────┘
++-----------------+--------------+------------+------------------------+
+| Ticket ID       | License Plate| Type       | Entry Time             |
++-----------------+--------------+------------+------------------------+
+| TKT-A1B2C3D4    | KA01AB1234   | Car        | 2024-01-15 10:30:00    |
+| TKT-E5F6G7H8    | MH02XY5678   | Motorbike  | 2024-01-15 11:00:00    |
+| TKT-I9J0K1L2    | TN03ZZ9999   | Truck      | 2024-01-15 09:15:00    |
++-----------------+--------------+------------+------------------------+
 ```
 
 ### 6. View Fee Structure
@@ -365,20 +381,20 @@ Total vehicles parked: 3
 Display current pricing:
 
 ```
-═══ FEE STRUCTURE ═══
+=== FEE STRUCTURE ===
 
-┌────────────┬─────────────────────┬────────────────────────┐
-│ Vehicle    │ Base Rate (1st hr)  │ Additional (per hour)  │
-├────────────┼─────────────────────┼────────────────────────┤
-│ Motorbike  │ ₹10.00              │ ₹5.00                  │
-│ Car        │ ₹20.00              │ ₹10.00                 │
-│ Truck      │ ₹40.00              │ ₹20.00                 │
-└────────────┴─────────────────────┴────────────────────────┘
++------------+---------------------+------------------------+
+| Vehicle    | Base Rate (1st hr)  | Additional (per hour)  |
++------------+---------------------+------------------------+
+| Motorbike  | Rs.10.00            | Rs.5.00                |
+| Car        | Rs.20.00            | Rs.10.00               |
+| Truck      | Rs.40.00            | Rs.20.00               |
++------------+---------------------+------------------------+
 
 Notes:
-  • Minimum charge is the base rate (for duration ≤ 1 hour)
-  • Partial hours are rounded up to the next full hour
-  • Formula: Base Rate + (Additional Hours × Hourly Rate)
+  - Minimum charge is the base rate (for duration <= 1 hour)
+  - Partial hours are rounded up to the next full hour
+  - Formula: Base Rate + (Additional Hours x Hourly Rate)
 ```
 
 ### 7. Search Ticket
@@ -386,7 +402,7 @@ Notes:
 Look up ticket by ID or license plate:
 
 ```
-═══ SEARCH TICKET ═══
+=== SEARCH TICKET ===
 
 Search by:
   1. Ticket ID
@@ -394,9 +410,9 @@ Search by:
 Enter choice (1-2): 2
 Enter license plate: KA01AB1234
 
-✓ Ticket found:
-╔════════════════════════════════════════╗
-║         PARKING TICKET                 ║
+[SUCCESS] Ticket found:
++========================================+
+|         PARKING TICKET                 |
 ...
 ```
 
@@ -489,11 +505,84 @@ Result: ALL TESTS PASSED
 
 ---
 
-## Development Phases
+## Extensibility
 
-- [x] **Phase 1**: Project Setup & Core Models
-- [x] **Phase 2**: Design Pattern Implementations
-- [x] **Phase 3**: Core Services
-- [x] **Phase 4**: Console Application
-- [x] **Phase 5**: Testing Suite
-- [ ] **Phase 6**: Documentation Completion
+The system is designed to be easily extensible using design patterns.
+
+### Adding a New Vehicle Type
+
+**Step 1:** Add enum value in `VehicleType.java`
+```java
+public enum VehicleType {
+    MOTORBIKE("Motorbike", 1),
+    CAR("Car", 2),
+    TRUCK("Truck", 3),
+    BUS("Bus", 4);  // New vehicle type
+    // ...
+}
+```
+
+**Step 2:** Create vehicle class in `model/`
+```java
+// Bus.java
+public class Bus extends Vehicle {
+    public Bus(String licensePlate, String ownerName) {
+        super(licensePlate, ownerName);
+    }
+    
+    @Override
+    public VehicleType getType() {
+        return VehicleType.BUS;
+    }
+}
+```
+
+**Step 3:** Add factory case in `VehicleFactory.java`
+```java
+case BUS:
+    return new Bus(licensePlate, ownerName);
+```
+
+**Step 4:** Create fee strategy in `strategy/`
+```java
+// BusFeeStrategy.java
+public class BusFeeStrategy implements FeeCalculationStrategy {
+    private static final double BASE_RATE = 50.0;
+    private static final double HOURLY_RATE = 25.0;
+    // ... implement interface methods
+}
+```
+
+**Step 5:** Register strategy in `FeeStrategyFactory.java`
+```java
+static {
+    strategies.put(VehicleType.BUS, new BusFeeStrategy());
+}
+```
+
+### Adding a New Fee Strategy (e.g., Weekend Pricing)
+
+**Step 1:** Create new strategy class
+```java
+public class WeekendCarFeeStrategy implements FeeCalculationStrategy {
+    private static final double BASE_RATE = 30.0;  // Higher weekend rate
+    private static final double HOURLY_RATE = 15.0;
+    // ... implement interface methods
+}
+```
+
+**Step 2:** Register dynamically at runtime
+```java
+// In your application initialization
+FeeStrategyFactory.registerStrategy(VehicleType.CAR, new WeekendCarFeeStrategy());
+```
+
+### Adding New Functionality
+
+| Extension | Where to Add |
+|-----------|--------------|
+| New spot status (Reserved, Disabled) | `SpotStatus.java` enum |
+| New payment methods | Create `PaymentStrategy` interface |
+| Notifications | Create `Observer` pattern for events |
+| Persistence | Add `Repository` layer for storage |
+| Multi-parking support | Extend `ParkingLot` to `ParkingLotManager` |
