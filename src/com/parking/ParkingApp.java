@@ -92,12 +92,12 @@ public class ParkingApp {
 
         if (useDefault.equals("y") || useDefault.equals("yes")) {
             parkingService.initializeParkingLot("City Center Parking");
-            System.out.println("\n✓ Parking lot initialized with default configuration:");
-            System.out.println("  • Name: City Center Parking");
-            System.out.println("  • 3 floors");
-            System.out.println("  • 10 motorbike spots per floor");
-            System.out.println("  • 10 car spots per floor");
-            System.out.println("  • 5 truck spots per floor");
+            System.out.println("\n[SUCCESS] Parking lot initialized with default configuration:");
+            System.out.println("  - Name: City Center Parking");
+            System.out.println("  - 3 floors");
+            System.out.println("  - 10 motorbike spots per floor");
+            System.out.println("  - 10 car spots per floor");
+            System.out.println("  - 5 truck spots per floor");
         } else {
             String name = getStringInput("Enter parking lot name: ");
             int floors = getPositiveIntInput("Enter number of floors: ");
@@ -108,7 +108,7 @@ public class ParkingApp {
             parkingService.initializeParkingLot(name, floors,
                 motorbikeSpots, carSpots, truckSpots);
 
-            System.out.println("\n✓ Parking lot initialized successfully!");
+            System.out.println("\n[SUCCESS] Parking lot initialized!");
         }
     }
 
@@ -149,7 +149,7 @@ public class ParkingApp {
                 isRunning = false;
                 break;
             default:
-                System.out.println("\n❌ Invalid choice. Please try again.");
+                System.out.println("\n[ERROR] Invalid choice. Please try again.");
         }
     }
 
@@ -157,7 +157,7 @@ public class ParkingApp {
      * Park a vehicle
      */
     private void parkVehicle() {
-        System.out.println("\n═══ PARK VEHICLE ═══\n");
+        System.out.println("\n=== PARK VEHICLE ===\n");
 
         // Show vehicle types
         System.out.println("Vehicle Types:");
@@ -172,13 +172,13 @@ public class ParkingApp {
         VehicleType vehicleType = getVehicleTypeFromChoice(typeChoice);
 
         if (vehicleType == null) {
-            System.out.println("\n❌ Invalid vehicle type.");
+            System.out.println("\n[ERROR] Invalid vehicle type.");
             return;
         }
 
         // Check availability first
         if (!parkingService.isParkingAvailable(vehicleType)) {
-            System.out.printf("\n❌ Sorry, no parking spots available for %s.%n",
+            System.out.printf("\n[ERROR] Sorry, no parking spots available for %s.%n",
                 vehicleType.getDisplayName());
             return;
         }
@@ -186,7 +186,7 @@ public class ParkingApp {
         // Get vehicle details
         String licensePlate = getStringInput("Enter license plate: ");
         if (licensePlate.isEmpty()) {
-            System.out.println("\n❌ License plate cannot be empty.");
+            System.out.println("\n[ERROR] License plate cannot be empty.");
             return;
         }
 
@@ -198,16 +198,16 @@ public class ParkingApp {
         try {
             ParkingTicket ticket = parkingService.parkVehicle(vehicleType, licensePlate, ownerName);
 
-            System.out.println("\n✓ Vehicle parked successfully!");
+            System.out.println("\n[SUCCESS] Vehicle parked successfully!");
             System.out.println(ticket.toString());
-            System.out.println("\n⚠️  Please keep your ticket ID safe: " + ticket.getTicketId());
+            System.out.println("\n[IMPORTANT] Please keep your ticket ID safe: " + ticket.getTicketId());
 
         } catch (VehicleAlreadyParkedException e) {
-            System.out.println("\n❌ " + e.getMessage());
+            System.out.println("\n[ERROR] " + e.getMessage());
         } catch (ParkingFullException e) {
-            System.out.println("\n❌ " + e.getMessage());
+            System.out.println("\n[ERROR] " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.out.println("\n❌ Invalid input: " + e.getMessage());
+            System.out.println("\n[ERROR] Invalid input: " + e.getMessage());
         }
     }
 
@@ -215,11 +215,11 @@ public class ParkingApp {
      * Exit parking by ticket ID
      */
     private void exitByTicketId() {
-        System.out.println("\n═══ EXIT PARKING ═══\n");
+        System.out.println("\n=== EXIT PARKING ===\n");
 
         String ticketId = getStringInput("Enter ticket ID: ").toUpperCase();
         if (ticketId.isEmpty()) {
-            System.out.println("\n❌ Ticket ID cannot be empty.");
+            System.out.println("\n[ERROR] Ticket ID cannot be empty.");
             return;
         }
 
@@ -230,11 +230,11 @@ public class ParkingApp {
      * Exit parking by license plate
      */
     private void exitByLicensePlate() {
-        System.out.println("\n═══ EXIT PARKING ═══\n");
+        System.out.println("\n=== EXIT PARKING ===\n");
 
         String licensePlate = getStringInput("Enter license plate: ").toUpperCase();
         if (licensePlate.isEmpty()) {
-            System.out.println("\n❌ License plate cannot be empty.");
+            System.out.println("\n[ERROR] License plate cannot be empty.");
             return;
         }
 
@@ -243,14 +243,14 @@ public class ParkingApp {
                 .getActiveTicketByLicensePlate(licensePlate);
 
             if (ticket == null) {
-                System.out.println("\n❌ No active parking found for license plate: " + licensePlate);
+                System.out.println("\n[ERROR] No active parking found for license plate: " + licensePlate);
                 return;
             }
 
             processExit(ticket.getTicketId());
 
         } catch (Exception e) {
-            System.out.println("\n❌ Error: " + e.getMessage());
+            System.out.println("\n[ERROR] " + e.getMessage());
         }
     }
 
@@ -262,7 +262,7 @@ public class ParkingApp {
             // Get ticket first to show fee breakdown
             ParkingTicket ticket = parkingService.getTicket(ticketId);
             if (ticket == null) {
-                System.out.println("\n❌ Ticket not found: " + ticketId);
+                System.out.println("\n[ERROR] Ticket not found: " + ticketId);
                 return;
             }
 
@@ -275,12 +275,12 @@ public class ParkingApp {
             // Show fee breakdown
             System.out.println(parkingService.getFeeBreakdown(ticketId));
 
-            System.out.println("✓ Payment processed successfully!");
+            System.out.println("[SUCCESS] Payment processed successfully!");
 
         } catch (InvalidTicketException e) {
-            System.out.println("\n❌ " + e.getMessage());
+            System.out.println("\n[ERROR] " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("\n❌ Error processing exit: " + e.getMessage());
+            System.out.println("\n[ERROR] Error processing exit: " + e.getMessage());
         }
     }
 
@@ -288,7 +288,7 @@ public class ParkingApp {
      * View parking status
      */
     private void viewParkingStatus() {
-        System.out.println("\n═══ PARKING STATUS ═══");
+        System.out.println("\n=== PARKING STATUS ===");
         System.out.println(parkingService.getParkingStatus());
         System.out.printf("Currently parked vehicles: %d%n", parkingService.getActiveTicketCount());
     }
@@ -297,7 +297,7 @@ public class ParkingApp {
      * View all parked vehicles
      */
     private void viewParkedVehicles() {
-        System.out.println("\n═══ PARKED VEHICLES ═══\n");
+        System.out.println("\n=== PARKED VEHICLES ===\n");
 
         Map<String, ParkingTicket> activeTickets = parkingService.getActiveTickets();
 
@@ -373,21 +373,21 @@ public class ParkingApp {
             String licensePlate = getStringInput("Enter license plate: ").toUpperCase();
             ticket = parkingService.getTicketService().getActiveTicketByLicensePlate(licensePlate);
         } else {
-            System.out.println("\n❌ Invalid choice.");
+            System.out.println("\n[ERROR] Invalid choice.");
             return;
         }
 
         if (ticket == null) {
-            System.out.println("\n❌ Ticket not found.");
+            System.out.println("\n[ERROR] Ticket not found.");
         } else {
-            System.out.println("\n✓ Ticket found:");
+            System.out.println("\n[SUCCESS] Ticket found:");
             System.out.println(ticket.toString());
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
+    // ===================================================================
     // INPUT HELPER METHODS
-    // ═══════════════════════════════════════════════════════════════
+    // ===================================================================
 
     /**
      * Get string input from user

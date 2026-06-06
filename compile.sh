@@ -36,7 +36,7 @@ javac -d "$OUT_DIR" $JAVA_FILES 2>&1
 # Check if compilation was successful
 if [ $? -eq 0 ]; then
     echo ""
-    echo "✓ Compilation successful!"
+    echo "[SUCCESS] Compilation successful!"
     echo ""
     echo "To run the application, execute:"
     echo "  ./run.sh"
@@ -45,7 +45,7 @@ if [ $? -eq 0 ]; then
     echo "  java -cp $OUT_DIR com.parking.ParkingApp"
 else
     echo ""
-    echo "✗ Compilation failed!"
+    echo "[FAILED] Compilation failed!"
     exit 1
 fi
 

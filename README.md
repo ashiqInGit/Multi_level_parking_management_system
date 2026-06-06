@@ -404,7 +404,88 @@ Enter license plate: KA01AB1234
 
 ## Testing
 
-*Coming in Phase 5*
+The project includes a comprehensive test suite with 78 test cases covering all components.
+
+### Running Tests
+
+```bash
+./test.sh
+```
+
+### Test Structure
+
+```
+test/
+└── com/parking/test/
+    ├── TestRunner.java              # Lightweight test framework
+    ├── TestResult.java              # Test result tracking
+    ├── TestMain.java                # Main test entry point
+    ├── factory/
+    │   └── VehicleFactoryTest.java  # 14 tests
+    ├── model/
+    │   └── ParkingTicketTest.java   # 15 tests
+    ├── strategy/
+    │   └── FeeCalculationTest.java  # 15 tests
+    ├── service/
+    │   ├── ParkingLotTest.java      # 12 tests
+    │   └── ParkingServiceTest.java  # 12 tests
+    └── integration/
+        └── ParkingSystemIntegrationTest.java  # 10 tests
+```
+
+### Test Categories
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Fee Calculation | 15 | Verifies pricing for all vehicle types |
+| Duration Calculation | 15 | Tests time rounding and calculation |
+| Vehicle Factory | 14 | Tests vehicle creation and validation |
+| Parking Lot | 12 | Tests singleton, initialization, spot allocation |
+| Parking Service | 12 | Tests parking operations and exceptions |
+| Integration | 10 | End-to-end parking flow scenarios |
+
+### Key Test Scenarios
+
+**Fee Calculation:**
+- Motorbike: 30 mins -> Rs.10, 2 hours -> Rs.15, 3 hours -> Rs.20
+- Car: 1 hour -> Rs.20, 2 hours -> Rs.30, 5 hours -> Rs.60
+- Truck: 2 hours -> Rs.60, 4 hours -> Rs.100
+
+**Duration Rounding:**
+- 30 minutes -> 1 hour (rounded up)
+- 61 minutes -> 2 hours (rounded up)
+- 120 minutes -> 2 hours (exact)
+
+**Edge Cases:**
+- Park same vehicle twice -> throws VehicleAlreadyParkedException
+- Park when full -> throws ParkingFullException
+- Exit invalid ticket -> throws InvalidTicketException
+- Zero duration -> charges base rate
+
+### Sample Test Output
+
+```
+============================================================
+   MULTI-LEVEL PARKING SYSTEM - TEST SUITE
+============================================================
+
+Running: FeeCalculationTest
+--------------------------------------------------
+  [PASS] testMotorbikeBaseRate
+  [PASS] testMotorbikeOneHour
+  [PASS] testCarThreeHours
+  ...
+
+============================================================
+TEST RESULTS SUMMARY
+============================================================
+Total:  78 tests
+Passed: 78 tests
+Failed: 0 tests
+============================================================
+
+Result: ALL TESTS PASSED
+```
 
 ---
 
@@ -414,5 +495,5 @@ Enter license plate: KA01AB1234
 - [x] **Phase 2**: Design Pattern Implementations
 - [x] **Phase 3**: Core Services
 - [x] **Phase 4**: Console Application
-- [ ] **Phase 5**: Testing Suite
+- [x] **Phase 5**: Testing Suite
 - [ ] **Phase 6**: Documentation Completion
